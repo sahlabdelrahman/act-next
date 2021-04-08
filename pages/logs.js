@@ -8,7 +8,7 @@ const Logs = () => {
     axios.get("http://34.65.51.37/Logs").then((res) => {
       setLogs(res.data);
     });
-  });
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {

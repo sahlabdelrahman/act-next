@@ -27,6 +27,11 @@ const Dashboard = () => {
             </Link>
           </button>
           <button>
+            <Link href="/sunConfig">
+              <a>Sun Config</a>
+            </Link>
+          </button>
+          <button>
             <Link href="/operaConfig">
               <a>Opera Config</a>
             </Link>
