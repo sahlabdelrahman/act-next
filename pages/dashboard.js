@@ -41,6 +41,16 @@ const Dashboard = () => {
               <a>HRMS Config</a>
             </Link>
           </button>
+          <button>
+            <Link href="/mappingOperaToSunDetail">
+              <a>Mapping Opera to sun Detail</a>
+            </Link>
+          </button>
+          <button>
+            <Link href="/mappingOperaToSunHDR">
+              <a>Mapping Opera to sun HDR</a>
+            </Link>
+          </button>
         </div>
       </main>
     </div>

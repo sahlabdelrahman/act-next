@@ -3,7 +3,7 @@ import Head from "next/head";
 import axios from "axios";
 import useInput from "../components/hooks/useInput";
 
-const HRMSReportConfig = () => {
+const sunDetailConfig = () => {
   const {
     value: name,
     resetValue: resetName,
@@ -18,23 +18,10 @@ const HRMSReportConfig = () => {
   const [type, setType] = useState("");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Hrms/Report/GetColumns").then((res) => {
+    axios.get("http://34.65.51.37/Sun/Detail/GetColumns").then((res) => {
       setColumns(res.data);
     });
   }, []);
-
-  const handleConfig = () => {
-    // const cycleTimeConfig = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   data: { day: parseInt(day), hour: parseInt(hour), min: parseInt(minute) },
-    // };
-    // axios("http://34.65.51.37/Hrms/UpdateCycleTime", cycleTimeConfig)
-    //   .then((res) => console.log(res))
-    //   .catch((error) => {
-    //     console.error("There was an error!", error);
-    //   });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,7 +41,7 @@ const HRMSReportConfig = () => {
           headers: { "Content-Type": "application/json" },
           data: [...columns],
         };
-        axios("http://34.65.51.37/Hrms/Report/UpdateColumns", columnsConfig)
+        axios("http://34.65.51.37/Sun/Detail/UpdateColumns", columnsConfig)
           .then((res) => console.log(res))
           .catch((error) => {
             console.error("There was an error!", error);
@@ -97,14 +84,11 @@ const HRMSReportConfig = () => {
       setColumns([...newColumns]);
     }
   };
-  const test = () => {
-    console.log(columns.length);
-  };
 
   return (
     <div>
       <Head>
-        <title>HRMS Report Config</title>
+        <title>Sun Detail Config</title>
       </Head>
 
       <main>
@@ -152,9 +136,8 @@ const HRMSReportConfig = () => {
             </form>
           </div>
         </div>
-        <button onClick={test}>test</button>
       </main>
     </div>
   );
 };
-export default HRMSReportConfig;
+export default sunDetailConfig;

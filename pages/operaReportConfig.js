@@ -3,12 +3,26 @@ import Head from "next/head";
 import axios from "axios";
 import useInput from "../components/hooks/useInput";
 
-const HRMSReportConfig = () => {
+const operaReportConfig = () => {
   const {
     value: name,
     resetValue: resetName,
     setValue: setName,
     bind: bindName,
+  } = useInput("");
+
+  const {
+    value: startPos,
+    resetValue: resetStartPos,
+    setValue: setStartPos,
+    bind: bindStartPos,
+  } = useInput("");
+
+  const {
+    value: endPos,
+    resetValue: resetEndPos,
+    setValue: setEndPos,
+    bind: bindEndPos,
   } = useInput("");
 
   const [columns, setColumns] = useState([]);
@@ -18,28 +32,25 @@ const HRMSReportConfig = () => {
   const [type, setType] = useState("");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Hrms/Report/GetColumns").then((res) => {
+    axios.get("http://34.65.51.37/Opera/Report/GetColumns").then((res) => {
       setColumns(res.data);
     });
   }, []);
 
-  const handleConfig = () => {
-    // const cycleTimeConfig = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   data: { day: parseInt(day), hour: parseInt(hour), min: parseInt(minute) },
-    // };
-    // axios("http://34.65.51.37/Hrms/UpdateCycleTime", cycleTimeConfig)
-    //   .then((res) => console.log(res))
-    //   .catch((error) => {
-    //     console.error("There was an error!", error);
-    //   });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    setColumns([...columns, { name: name, type: type }]);
+    setColumns([
+      ...columns,
+      {
+        name: name,
+        startPOS: parseInt(startPos),
+        endPOS: parseInt(endPos),
+        type: type,
+      },
+    ]);
     setName("");
+    setStartPos("");
+    setEndPos("");
     setType("");
   };
 
@@ -54,7 +65,7 @@ const HRMSReportConfig = () => {
           headers: { "Content-Type": "application/json" },
           data: [...columns],
         };
-        axios("http://34.65.51.37/Hrms/Report/UpdateColumns", columnsConfig)
+        axios("http://34.65.51.37/Opera/Report/UpdateColumns", columnsConfig)
           .then((res) => console.log(res))
           .catch((error) => {
             console.error("There was an error!", error);
@@ -73,9 +84,11 @@ const HRMSReportConfig = () => {
 
   const [idOfeditedColumn, setIdOfEditedColumn] = useState("");
 
-  const handleEdit = (name, type, i) => {
+  const handleEdit = (name, type, i, startPos, endPos) => {
     setIsEdited(true);
     setName(name);
+    setStartPos(startPos);
+    setEndPos(endPos);
     setIdOfEditedColumn(name);
   };
 
@@ -83,11 +96,19 @@ const HRMSReportConfig = () => {
     setColumns(
       columns.map((column) => {
         if (column.name !== idOfeditedColumn) return column;
-        return { ...column, name: name, type: type };
+        return {
+          ...column,
+          name: name,
+          startPOS: parseInt(startPos),
+          endPOS: parseInt(endPos),
+          type: type,
+        };
       })
     );
     setIsEdited(false);
     setName("");
+    setStartPos("");
+    setEndPos("");
     setType("");
   };
 
@@ -98,26 +119,38 @@ const HRMSReportConfig = () => {
     }
   };
   const test = () => {
-    console.log(columns.length);
+    console.log(columns);
   };
 
   return (
     <div>
       <Head>
-        <title>HRMS Report Config</title>
+        <title>Opera Report Config</title>
       </Head>
 
       <main>
         <div>
           <h5>Columns</h5>
-          {columns.map(({ name, type, id }, i) => (
+          {columns.map(({ name, type, id, startPOS, endPOS }, i) => (
             <div key={i}>
               <span>
                 Name: {name}
                 {"  "}
               </span>
+              <span>
+                Start pos: {startPOS}
+                {"  "}
+              </span>
+              <span>
+                End pos: {endPOS}
+                {"  "}
+              </span>
               <span>Type: {type}</span>
-              <button onClick={() => handleEdit(name, type, i)}>edit</button>
+              <button
+                onClick={() => handleEdit(name, type, i, startPOS, endPOS)}
+              >
+                edit
+              </button>
               <button onClick={() => handleDelete(name)}>delete</button>
             </div>
           ))}
@@ -128,6 +161,10 @@ const HRMSReportConfig = () => {
             <form>
               <label>Name</label>
               <input type="text" {...bindName} required />
+              <label>Start position</label>
+              <input type="number" {...bindStartPos} required />
+              <label>End position</label>
+              <input type="number" {...bindEndPos} required />
               <label>Choose a Type</label>
               <select
                 name="columns"
@@ -157,4 +194,4 @@ const HRMSReportConfig = () => {
     </div>
   );
 };
-export default HRMSReportConfig;
+export default operaReportConfig;

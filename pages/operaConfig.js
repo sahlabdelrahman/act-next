@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import axios from "axios";
 import useInput from "../components/hooks/useInput";
+import { useRouter } from "next/router";
 
 const OperaConfig = () => {
   useEffect(() => {
@@ -14,6 +15,8 @@ const OperaConfig = () => {
       setMinute(res.data.min);
     });
   }, []);
+
+  const router = useRouter();
 
   const {
     value: hour,
@@ -44,6 +47,30 @@ const OperaConfig = () => {
 
   const [number, setNumber] = useState(0);
 
+  const handleConfig = () => {
+    axios
+      .post(`http://34.65.51.37/Opera/UpdateFilePath?FilePath=${filePath}`)
+      .then((res) => console.log(res))
+      .catch((error) => {
+        console.error("There was an error!", error.response.data);
+      });
+
+    const cycleTimeConfig = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: { hour: parseInt(hour), min: parseInt(minute) },
+    };
+
+    axios("http://34.65.51.37/Opera/UpdateCycleTime", cycleTimeConfig)
+      .then((res) => console.log(res))
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+    router.push({
+      pathname: `/operaReportConfig`,
+    });
+  };
+
   return (
     <div>
       <Head>
@@ -53,19 +80,24 @@ const OperaConfig = () => {
       <main>
         <div>
           <h5>Daily at</h5>
-          <div>
-            <label>Hour</label>
-            <input type="number" min="0" max="23" {...bindHour} />
-          </div>
-          <div>
-            <label>Minute</label>
-            <input type="number" min="0" max="59" {...bindMinute} />
-          </div>
+          <form>
+            <div>
+              <label>Hour</label>
+              <input type="number" min="0" max="23" {...bindHour} />
+            </div>
+            <div>
+              <label>Minute</label>
+              <input type="number" min="0" max="59" {...bindMinute} />
+            </div>
 
-          <div>
-            <label>Path</label>
-            <input type="text" {...bindFilePath} />
-          </div>
+            <div>
+              <label>Path</label>
+              <input type="text" {...bindFilePath} />
+              <button type="button" onClick={handleConfig}>
+                Config
+              </button>
+            </div>
+          </form>
         </div>
         <div>
           <h5>File Config</h5>

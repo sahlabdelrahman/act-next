@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Head from "next/head";
 import axios from "axios";
 import useInput from "../components/hooks/useInput";
+import { useRouter } from "next/router";
 
 const sunConfig = () => {
   useEffect(() => {
@@ -9,6 +10,8 @@ const sunConfig = () => {
       setConnectionString(res.data);
     });
   }, []);
+
+  const router = useRouter();
 
   const {
     value: connectionString,
@@ -26,6 +29,10 @@ const sunConfig = () => {
       .catch((error) => {
         console.error("There was an error!", error.response.data);
       });
+
+    router.push({
+      pathname: `/sunDetailConfig`,
+    });
   };
 
   return (
