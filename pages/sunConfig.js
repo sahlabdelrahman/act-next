@@ -4,6 +4,14 @@ import axios from "axios";
 import useInput from "../components/hooks/useInput";
 import { useRouter } from "next/router";
 
+import Header from "../components/header/header.js";
+import SideNav from "../components/sideNav/sideNav";
+import BreadCrumb from "../components/breadCrumb/breadCrumb";
+
+import Checked from "../public/images/checked.svg";
+import NotChecked from "../public/images/notChecked.svg";
+import Link from "next/link";
+
 const sunConfig = () => {
   useEffect(() => {
     axios.get("http://34.65.51.37/Sun/GetConnectionString").then((res) => {
@@ -20,7 +28,8 @@ const sunConfig = () => {
     bind: bindConnectionString,
   } = useInput("");
 
-  const handleConfig = () => {
+  const handleConfig = (e) => {
+    e.preventDefault();
     axios
       .post(
         `http://34.65.51.37/Sun/UpdateConnectionString?ConnectionString=${connectionString}`
@@ -40,15 +49,55 @@ const sunConfig = () => {
       <Head>
         <title>Sun Config</title>
       </Head>
+      <Header />
+      <SideNav />
 
-      <main>
-        <div>
-          <div>
-            <label>Connection</label>
-            <input type="text" {...bindConnectionString} />
-            <button type="button" onClick={handleConfig}>
-              Config
-            </button>
+      <main className="main-sun-config">
+        <div className="container">
+          <div className="main_sun_head">
+            <h5>Sun Configraution</h5>
+            <BreadCrumb path="sunConfig" page="Sun Configraution" />
+          </div>
+          <div className="main_sun_body">
+            <div className="container">
+              <div className="links">
+                <div className="active">
+                  <Link href="/sunConfig">
+                    <a>
+                      <img src={Checked} alt="Checked" />
+
+                      <span>Configration</span>
+                    </a>
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/sunDetailConfig">
+                    <a>
+                      <img src={NotChecked} alt="NotChecked" />
+                      <span>Sun Detail Configration</span>
+                    </a>
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/sunHDRConfig">
+                    <a>
+                      <img src={NotChecked} alt="NotChecked" />
+                      <span>Sun HDR Configration</span>
+                    </a>
+                  </Link>
+                </div>
+              </div>
+              <form onSubmit={handleConfig}>
+                <label>Connection</label>
+                <input
+                  type="text"
+                  placeholder="Connection"
+                  required
+                  {...bindConnectionString}
+                />
+                <button type="submit">Config</button>
+              </form>
+            </div>
           </div>
         </div>
       </main>

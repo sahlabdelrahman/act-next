@@ -14,28 +14,13 @@ import Trash from "../public/images/trash.svg";
 import Edit from "../public/images/edit.svg";
 import Link from "next/link";
 
-const operaReportConfig = () => {
+const sunHDRConfig = () => {
   const router = useRouter();
-
   const {
     value: name,
     resetValue: resetName,
     setValue: setName,
     bind: bindName,
-  } = useInput("");
-
-  const {
-    value: startPos,
-    resetValue: resetStartPos,
-    setValue: setStartPos,
-    bind: bindStartPos,
-  } = useInput("");
-
-  const {
-    value: endPos,
-    resetValue: resetEndPos,
-    setValue: setEndPos,
-    bind: bindEndPos,
   } = useInput("");
 
   const [columns, setColumns] = useState([]);
@@ -45,25 +30,15 @@ const operaReportConfig = () => {
   const [type, setType] = useState("DateTime");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Opera/Report/GetColumns").then((res) => {
+    axios.get("http://34.65.51.37/Sun/HDR/GetColumns").then((res) => {
       setColumns(res.data);
     });
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setColumns([
-      ...columns,
-      {
-        name: name,
-        startPOS: parseInt(startPos),
-        endPOS: parseInt(endPos),
-        type: type,
-      },
-    ]);
+    setColumns([...columns, { name: name, type: type }]);
     setName("");
-    setStartPos("");
-    setEndPos("");
     setType("");
   };
 
@@ -78,7 +53,7 @@ const operaReportConfig = () => {
           headers: { "Content-Type": "application/json" },
           data: [...columns],
         };
-        axios("http://34.65.51.37/Opera/Report/UpdateColumns", columnsConfig)
+        axios("http://34.65.51.37/Sun/HDR/UpdateColumns", columnsConfig)
           .then((res) => console.log(res))
           .catch((error) => {
             console.error("There was an error!", error);
@@ -97,12 +72,10 @@ const operaReportConfig = () => {
 
   const [idOfeditedColumn, setIdOfEditedColumn] = useState("");
 
-  const handleEdit = (name, type, i, startPos, endPos) => {
+  const handleEdit = (name, type, i) => {
     setIsEdited(true);
     setName(name);
     setType(type);
-    setStartPos(startPos);
-    setEndPos(endPos);
     setIdOfEditedColumn(name);
   };
 
@@ -111,19 +84,11 @@ const operaReportConfig = () => {
     setColumns(
       columns.map((column) => {
         if (column.name !== idOfeditedColumn) return column;
-        return {
-          ...column,
-          name: name,
-          startPOS: parseInt(startPos),
-          endPOS: parseInt(endPos),
-          type: type,
-        };
+        return { ...column, name: name, type: type };
       })
     );
     setIsEdited(false);
     setName("");
-    setStartPos("");
-    setEndPos("");
     setType("");
   };
 
@@ -136,14 +101,14 @@ const operaReportConfig = () => {
 
   const handleDone = () => {
     router.push({
-      pathname: `/operaIsDone`,
+      pathname: `/sunIsDone`,
     });
   };
 
   return (
     <div>
       <Head>
-        <title>Opera Report Config</title>
+        <title>Sun HDR Config</title>
       </Head>
 
       <Header />
@@ -152,56 +117,63 @@ const operaReportConfig = () => {
       <main className="main-sun-config">
         <div className="container">
           <div className="main_sun_head">
-            <h5>Opera Configraution</h5>
-            <BreadCrumb path="operaConfig" page="Opera Configraution" />
+            <h5>Sun Configraution</h5>
+            <BreadCrumb path="sunConfig" page="Sun Configraution" />
           </div>
 
           <div className="main_sun_body scrollable">
             <div className="container">
               <div className="links">
                 <div>
-                  <Link href="/operaConfig">
+                  <Link href="/sunConfig">
                     <a>
                       <img src={NotChecked} alt="NotChecked" />
                       <span>Configraution</span>
                     </a>
                   </Link>
                 </div>
+                <div>
+                  <Link href="/sunDetailConfig">
+                    <a>
+                      <img src={NotChecked} alt="NotChecked" />
+
+                      <span>Sun Detail Configration</span>
+                    </a>
+                  </Link>
+                </div>
                 <div className="active">
-                  <Link href="/operaReportConfig">
+                  <Link href="/sunHDRConfig">
                     <a>
                       <img src={Checked} alt="Checked" />
 
-                      <span>Opera Report Configration</span>
+                      <span>Sun HDR Configration</span>
                     </a>
                   </Link>
                 </div>
               </div>
               <form
                 onSubmit={isEdited ? handleUpdate : handleSubmit}
-                className="multi-inputs more"
+                className="multi-inputs"
               >
                 <h5>Add new Column</h5>
                 <div>
                   <div>
                     <label>Name</label>
-                    <input type="text" {...bindName} required />
-                  </div>
-                  <div>
-                    <label>Start position</label>
-                    <input type="number" {...bindStartPos} required />
-                  </div>
-                  <div>
-                    <label>End position</label>
-                    <input type="number" {...bindEndPos} required />
+                    <input
+                      type="text"
+                      required
+                      {...bindName}
+                      required
+                      placeholder="Enter Name"
+                    />
                   </div>
                   <div className="select-with-label">
                     <label>Choose a Type</label>
                     <select
                       name="columns"
                       id="columns"
-                      required
                       value={type}
+                      required
                       onChange={(e) => setType(e.target.value)}
                     >
                       {types.map((type, i) => (
@@ -211,7 +183,6 @@ const operaReportConfig = () => {
                       ))}
                     </select>
                   </div>
-
                   <div>
                     {isEdited ? (
                       <button type="submit">Update Column</button>
@@ -224,24 +195,20 @@ const operaReportConfig = () => {
                   </div>
                 </div>
               </form>
-
               <div className="table">
                 <table>
                   <tr>
                     <th>Name</th>
-                    <th>Start pos</th>
-                    <th>End pos</th>
                     <th>Type</th>
                     <th>Settings</th>
                   </tr>
-                  {columns.map(({ name, type, id, startPOS, endPOS }, i) => (
+
+                  {columns.map(({ name, type, id }, i) => (
                     <tr key={i}>
                       <td>
                         {name}
                         {"  "}
                       </td>
-                      <td>{startPOS}</td>
-                      <td>{endPOS}</td>
                       <td>{type}</td>
                       <td>
                         <img
@@ -253,9 +220,7 @@ const operaReportConfig = () => {
                         <img
                           src={Edit}
                           alt="Edit"
-                          onClick={() =>
-                            handleEdit(name, type, i, startPOS, endPOS)
-                          }
+                          onClick={() => handleEdit(name, type, i)}
                         />
                       </td>
                     </tr>
@@ -269,4 +234,4 @@ const operaReportConfig = () => {
     </div>
   );
 };
-export default operaReportConfig;
+export default sunHDRConfig;

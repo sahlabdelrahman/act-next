@@ -2,8 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import useInput from "../components/hooks/useInput";
+import { useRouter } from "next/router";
+
+import Header from "../components/header/header.js";
+import SideNav from "../components/sideNav/sideNav";
+import BreadCrumb from "../components/breadCrumb/breadCrumb";
+
+import Checked from "../public/images/checked.svg";
+import NotChecked from "../public/images/notChecked.svg";
+import Trash from "../public/images/trash.svg";
+import Edit from "../public/images/edit.svg";
+import Link from "next/link";
 
 const HRMSReportConfig = () => {
+  const router = useRouter();
   const {
     value: name,
     resetValue: resetName,
@@ -15,26 +27,13 @@ const HRMSReportConfig = () => {
 
   const types = ["DateTime", "Decimal", "Double", "Int", "String", "Short"];
 
-  const [type, setType] = useState("");
+  const [type, setType] = useState("DateTime");
 
   useEffect(() => {
     axios.get("http://34.65.51.37/Hrms/Report/GetColumns").then((res) => {
       setColumns(res.data);
     });
   }, []);
-
-  const handleConfig = () => {
-    // const cycleTimeConfig = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   data: { day: parseInt(day), hour: parseInt(hour), min: parseInt(minute) },
-    // };
-    // axios("http://34.65.51.37/Hrms/UpdateCycleTime", cycleTimeConfig)
-    //   .then((res) => console.log(res))
-    //   .catch((error) => {
-    //     console.error("There was an error!", error);
-    //   });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,10 +75,12 @@ const HRMSReportConfig = () => {
   const handleEdit = (name, type, i) => {
     setIsEdited(true);
     setName(name);
+    setType(type);
     setIdOfEditedColumn(name);
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (e) => {
+    e.preventDefault();
     setColumns(
       columns.map((column) => {
         if (column.name !== idOfeditedColumn) return column;
@@ -97,62 +98,129 @@ const HRMSReportConfig = () => {
       setColumns([...newColumns]);
     }
   };
-  const test = () => {
-    console.log(columns.length);
-  };
 
+  const handleDone = () => {
+    router.push({
+      pathname: `/hrmsIsDone`,
+    });
+  };
   return (
     <div>
       <Head>
         <title>HRMS Report Config</title>
       </Head>
 
-      <main>
-        <div>
-          <h5>Columns</h5>
-          {columns.map(({ name, type, id }, i) => (
-            <div key={i}>
-              <span>
-                Name: {name}
-                {"  "}
-              </span>
-              <span>Type: {type}</span>
-              <button onClick={() => handleEdit(name, type, i)}>edit</button>
-              <button onClick={() => handleDelete(name)}>delete</button>
-            </div>
-          ))}
-        </div>
-        <div>
-          <h5>Add column</h5>
-          <div>
-            <form>
-              <label>Name</label>
-              <input type="text" {...bindName} required />
-              <label>Choose a Type</label>
-              <select
-                name="columns"
-                id="columns"
-                onChange={(e) => setType(e.target.value)}
+      <Header />
+      <SideNav />
+
+      <main className="main-sun-config">
+        <div className="container">
+          <div className="main_sun_head">
+            <h5>HRMS Configraution</h5>
+            <BreadCrumb path="hrmsConfig" page="HRMS Configraution" />
+          </div>
+
+          <div className="main_sun_body scrollable">
+            <div className="container">
+              <div className="links">
+                <div>
+                  <Link href="/hrmsConfig">
+                    <a>
+                      <img src={NotChecked} alt="NotChecked" />
+                      <span>Configraution</span>
+                    </a>
+                  </Link>
+                </div>
+                <div className="active">
+                  <Link href="/hrmsReportConfig">
+                    <a>
+                      <img src={Checked} alt="Checked" />
+
+                      <span>HRMS Report Configration</span>
+                    </a>
+                  </Link>
+                </div>
+              </div>
+
+              <form
+                onSubmit={isEdited ? handleUpdate : handleSubmit}
+                className="multi-inputs"
               >
-                {types.map((type, i) => (
-                  <option key={i} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-              {isEdited ? (
-                <button type="button" onClick={handleUpdate}>
-                  Update Column
-                </button>
-              ) : (
-                <button type="button" onClick={handleSubmit}>
-                  Submit
-                </button>
-              )}
-            </form>
+                <h5>Add new Column</h5>
+                <div>
+                  <div>
+                    <label>Name</label>
+                    <input
+                      type="text"
+                      required
+                      {...bindName}
+                      required
+                      placeholder="Enter Name"
+                    />
+                  </div>
+                  <div className="select-with-label">
+                    <label>Choose a Type</label>
+                    <select
+                      name="columns"
+                      id="columns"
+                      value={type}
+                      required
+                      onChange={(e) => setType(e.target.value)}
+                    >
+                      {types.map((type, i) => (
+                        <option key={i} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    {isEdited ? (
+                      <button type="submit">Update Column</button>
+                    ) : (
+                      <button type="submit">Submit</button>
+                    )}
+                    <button type="button" onClick={handleDone}>
+                      Done
+                    </button>
+                  </div>
+                </div>
+              </form>
+              <div className="table">
+                <table>
+                  <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Settings</th>
+                  </tr>
+
+                  {columns.map(({ name, type, id }, i) => (
+                    <tr key={i}>
+                      <td>
+                        {name}
+                        {"  "}
+                      </td>
+                      <td>{type}</td>
+                      <td>
+                        <img
+                          src={Trash}
+                          alt="Delete"
+                          onClick={() => handleDelete(name)}
+                        />
+
+                        <img
+                          src={Edit}
+                          alt="Edit"
+                          onClick={() => handleEdit(name, type, i)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </table>
+              </div>
+            </div>
           </div>
         </div>
-        <button onClick={test}>test</button>
       </main>
     </div>
   );

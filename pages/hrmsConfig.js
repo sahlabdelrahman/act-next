@@ -1,22 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import useInput from "../components/hooks/useInput";
 import { useRouter } from "next/router";
 
-const HRMSConfig = () => {
-  useEffect(() => {
-    axios.get("http://34.65.51.37/Hrms/GetConnectionString").then((res) => {
-      setConnectionString(res.data);
-    });
+import Header from "../components/header/header.js";
+import SideNav from "../components/sideNav/sideNav";
+import BreadCrumb from "../components/breadCrumb/breadCrumb";
 
-    axios.get("http://34.65.51.37/Hrms/GetCycleTime").then((res) => {
-      setDay(res.data.day);
-      setHour(res.data.hour);
-      setMinute(res.data.min);
-    });
-  }, []);
+import Checked from "../public/images/checked.svg";
+import NotChecked from "../public/images/notChecked.svg";
+import Link from "next/link";
+
+const HRMSConfig = () => {
   const router = useRouter();
+
+  // const [disable, setDisable] = useState(true);
 
   const {
     value: day,
@@ -46,7 +45,29 @@ const HRMSConfig = () => {
     bind: bindConnectionString,
   } = useInput("");
 
-  const handleConfig = () => {
+  useEffect(() => {
+    axios.get("http://34.65.51.37/Hrms/GetConnectionString").then((res) => {
+      setConnectionString(res.data);
+    });
+
+    axios.get("http://34.65.51.37/Hrms/GetCycleTime").then((res) => {
+      setDay(res.data.day);
+      setHour(res.data.hour);
+      setMinute(res.data.min);
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(hour.length);
+  //   if (day || hour || minute || connectionString) {
+  //     setDisable(false);
+  //   } else if (!day || !hour || !minute || !connectionString) {
+  //     setDisable(true);
+  //   }
+  // }, [day, hour, minute, connectionString]);
+
+  const handleConfig = (e) => {
+    e.preventDefault();
     axios
       .post(
         `http://34.65.51.37/Hrms/UpdateConnectionString?ConnectionString=${connectionString}`
@@ -78,28 +99,79 @@ const HRMSConfig = () => {
         <title>HRMS Config</title>
       </Head>
 
-      <main>
-        <div>
-          <h5>monthly at</h5>
-          <div>
-            <label>Day</label>
-            <input type="number" min="0" max="28" {...bindDay} />
-          </div>
-          <div>
-            <label>Hour</label>
-            <input type="number" min="0" max="23" {...bindHour} />
-          </div>
-          <div>
-            <label>Minute</label>
-            <input type="number" min="0" max="59" {...bindMinute} />
-          </div>
+      <Header />
+      <SideNav />
 
-          <div>
-            <label>Connection</label>
-            <input type="text" {...bindConnectionString} />
-            <button type="button" onClick={handleConfig}>
-              Config
-            </button>
+      <main className="main-sun-config">
+        <div className="container">
+          <div className="main_sun_head">
+            <h5>HRMS Configraution</h5>
+            <BreadCrumb path="hrmsConfig" page="HRMS Configraution" />
+          </div>
+          <div className="main_sun_body">
+            <div className="container">
+              <div className="links">
+                <div className="active">
+                  <Link href="/hrmsConfig">
+                    <a>
+                      <img src={Checked} alt="Checked" />
+
+                      <span>Configration</span>
+                    </a>
+                  </Link>
+                </div>
+                <div>
+                  <Link href="/hrmsReportConfig">
+                    <a>
+                      <img src={NotChecked} alt="NotChecked" />
+                      <span>HRMS Report Configration</span>
+                    </a>
+                  </Link>
+                </div>
+              </div>
+
+              <form onSubmit={handleConfig} className="multi-inputs">
+                <h5>Monthly at</h5>
+                <div>
+                  <div>
+                    <label>Day</label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      max="28"
+                      {...bindDay}
+                    />
+                  </div>
+                  <div>
+                    <label>Hour</label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      max="23"
+                      {...bindHour}
+                    />
+                  </div>
+                  <div>
+                    <label>Minute</label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      max="59"
+                      {...bindMinute}
+                    />
+                  </div>
+
+                  <div>
+                    <label>Connection</label>
+                    <input type="text" required {...bindConnectionString} />
+                    <button type="submit">Config</button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </main>
