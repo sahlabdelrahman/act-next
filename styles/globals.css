@@ -66,6 +66,24 @@ header {
   margin-bottom: 8px;
 }
 
+.main-sun-config .main_sun_head .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-sun-config .main_sun_head .head span {
+  display: inline-block;
+  background-color: #fc6a28;
+  border: 1px solid navajowhite;
+  padding: 5px 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+
+  cursor: pointer;
+}
+
 .main-sun-config .main_sun_body {
   background: #ffffff;
   box-shadow: 0px 2px 10px #0000000d;

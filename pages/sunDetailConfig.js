@@ -119,6 +119,7 @@ const sunDetailConfig = () => {
         <div className="container">
           <div className="main_sun_head">
             <h5>Sun Configraution</h5>
+
             <BreadCrumb path="sunConfig" page="Sun Configraution" />
           </div>
 

@@ -80,6 +80,16 @@ const OperaConfig = () => {
     });
   };
 
+  const handleLoadDefaults = (e) => {
+    e.preventDefault();
+    axios
+      .post(`http://34.65.51.37/Opera/LoadDefaults`)
+      .then((res) => console.log(res.data))
+      .catch((error) => {
+        console.error("There was an error!", error.response.data);
+      });
+  };
+
   return (
     <div>
       <Head>
@@ -91,7 +101,12 @@ const OperaConfig = () => {
       <main className="main-sun-config">
         <div className="container">
           <div className="main_sun_head">
-            <h5>Opera Configraution</h5>
+            <div className="head">
+              <h5>Opera Configraution</h5>
+              <span type="button" onClick={handleLoadDefaults}>
+                Load Defaults
+              </span>
+            </div>
             <BreadCrumb path="operaConfig" page="Opera Configraution" />
           </div>
           <div className="main_sun_body">
