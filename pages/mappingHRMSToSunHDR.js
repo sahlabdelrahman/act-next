@@ -2,17 +2,21 @@ import React, { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import axios from "axios";
 import useInput from "../components/hooks/useInput";
+import { useRouter } from "next/router";
 
 import Header from "../components/header/header.js";
 import SideNav from "../components/sideNav/sideNav";
 import BreadCrumb from "../components/breadCrumb/breadCrumb";
 
+import Checked from "../public/images/checked.svg";
+import NotChecked from "../public/images/notChecked.svg";
 import Trash from "../public/images/trash.svg";
 import Edit from "../public/images/edit.svg";
+import Link from "next/link";
 
 import { apiPath } from "../components/apiPath/apiPath";
 
-const mappingOperaToSunDetail = () => {
+const mappingHRMSToSunHDR = () => {
   const {
     value: sunAttribute,
     resetValue: resetSunAttribute,
@@ -31,22 +35,20 @@ const mappingOperaToSunDetail = () => {
 
   const types = ["DateTime", "Decimal", "Double", "Int", "String", "Short"];
 
-  const [type, setType] = useState("DateTime");
+  const [type, setType] = useState("");
   const [mapWithOperaName, setMapWithOperaName] = useState("");
   const [mapWithOperaNames, setMapWithOperaNames] = useState([]);
-  const [conditionForType, setConditionForType] = useState("dateTimeValue");
+  const [conditionForType, setConditionForType] = useState("");
 
   useEffect(() => {
     axios
-      .get(
-        `${apiPath}Mapping/OperaToSun/ReportToDetail/GetOperaReportSunDetail`
-      )
+      .get(`${apiPath}Mapping/HrmsToSun/ReportToHdr/GetHrmsReportSunHdr`)
       .then((res) => {
         setColumns(res.data);
         console.log(res.data);
       });
 
-    axios.get(`${apiPath}Opera/Report/GetColumns`).then((res) => {
+    axios.get(`${apiPath}Hrms/Report/GetColumns`).then((res) => {
       setMapWithOperaNames(res.data.map((name) => name.name));
     });
   }, []);
@@ -136,7 +138,7 @@ const mappingOperaToSunDetail = () => {
           data: [...columns],
         };
         axios(
-          `${apiPath}Mapping/OperaToSun/ReportToDetail/UpdateOperaReportSunDetail`,
+          `${apiPath}Mapping/HrmsToSun/ReportToHdr/UpdateOperaReportSunHdr`,
           columnsConfig
         )
           .then((res) => console.log(res))
@@ -159,13 +161,11 @@ const mappingOperaToSunDetail = () => {
 
   const handleEdit = (sunAttribute, valueType, i) => {
     setIsEdited(true);
-    setType(valueType);
     setSunAttribute(sunAttribute);
     setIdOfEditedColumn(sunAttribute);
   };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
+  const handleUpdate = () => {
     setColumns(
       columns.map((column) => {
         if (column.sunAttribute !== idOfeditedColumn) return column;
@@ -221,10 +221,14 @@ const mappingOperaToSunDetail = () => {
     setCondition(e.target.value);
   };
 
+  const handleTypeChange = (e) => {
+    setType(e.target.value);
+  };
+
   const handleLoadDefaults = (e) => {
     e.preventDefault();
     axios
-      .post(`${apiPath}Mapping/OperaToSun/ReportToDetail/LoadDefaults`)
+      .post(`${apiPath}Mapping/HrmsToSun/ReportToHdr/LoadDefaults`)
       .then((res) => console.log(res.data))
       .catch((error) => {
         console.error("There was an error!", error.response.data);
@@ -234,7 +238,7 @@ const mappingOperaToSunDetail = () => {
   return (
     <div>
       <Head>
-        <title>Mapping Opera To Sun Detail</title>
+        <title>Mapping HRMS To Sun HDR</title>
       </Head>
 
       <Header />
@@ -244,15 +248,14 @@ const mappingOperaToSunDetail = () => {
         <div className="container">
           <div className="main_sun_head">
             <div className="head">
-              <h5>Mapping Opera Configraution</h5>
+              <h5>Mapping HRMS Configraution</h5>
               <span type="button" onClick={handleLoadDefaults}>
                 Load Defaults
               </span>
             </div>
-
             <BreadCrumb
-              path="mappingOperaToSunDetail"
-              page="Mapping Opera Configraution"
+              path="mappingHRMSToSunHDR"
+              page="Mapping HRMS Configraution"
             />
           </div>
 
@@ -274,9 +277,7 @@ const mappingOperaToSunDetail = () => {
                     <select
                       name="columns"
                       id="columns"
-                      required
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
+                      onChange={(e) => handleTypeChange(e)}
                     >
                       {types.map((type, i) => (
                         <option key={i} value={type}>
@@ -286,13 +287,12 @@ const mappingOperaToSunDetail = () => {
                     </select>
                   </div>
                   <div className="radio-buttons">
+                    <span>Choose</span>
                     <div>
-                      <span>Choose</span>
                       <input
                         type="radio"
                         id="isConst"
                         name="condition"
-                        required
                         onChange={(e) => handleCondition(e)}
                         value="isConst"
                       />
@@ -304,7 +304,6 @@ const mappingOperaToSunDetail = () => {
                         type="radio"
                         id="isAuto"
                         name="condition"
-                        required
                         onChange={(e) => handleCondition(e)}
                         value="isAuto"
                       />
@@ -315,7 +314,6 @@ const mappingOperaToSunDetail = () => {
                         type="radio"
                         id="mapWithOpera"
                         name="condition"
-                        required
                         onChange={(e) => handleCondition(e)}
                         value="mapWithOpera"
                       />
@@ -338,8 +336,6 @@ const mappingOperaToSunDetail = () => {
                       <select
                         name="mapWithOperaName"
                         id="mapWithOperaName"
-                        required
-                        value={mapWithOperaName}
                         onChange={(e) => setMapWithOperaName(e.target.value)}
                       >
                         {mapWithOperaNames.map((mapWithOperaName, i) => (
@@ -353,9 +349,13 @@ const mappingOperaToSunDetail = () => {
 
                   <div>
                     {isEdited ? (
-                      <button type="submit">Update Column</button>
+                      <button type="button" onClick={handleUpdate}>
+                        Update Column
+                      </button>
                     ) : (
-                      <button type="submit">Submit</button>
+                      <button type="button" onClick={handleSubmit}>
+                        Submit
+                      </button>
                     )}
                   </div>
                 </div>
@@ -416,4 +416,4 @@ const mappingOperaToSunDetail = () => {
     </div>
   );
 };
-export default mappingOperaToSunDetail;
+export default mappingHRMSToSunHDR;

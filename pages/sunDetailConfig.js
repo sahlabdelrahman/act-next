@@ -14,6 +14,8 @@ import Trash from "../public/images/trash.svg";
 import Edit from "../public/images/edit.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const sunDetailConfig = () => {
   const router = useRouter();
 
@@ -31,7 +33,7 @@ const sunDetailConfig = () => {
   const [type, setType] = useState("DateTime");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Sun/Detail/GetColumns").then((res) => {
+    axios.get(`${apiPath}Sun/Detail/GetColumns`).then((res) => {
       setColumns(res.data);
     });
   }, []);
@@ -60,7 +62,7 @@ const sunDetailConfig = () => {
           headers: { "Content-Type": "application/json" },
           data: [...columns],
         };
-        axios("http://34.65.51.37/Sun/Detail/UpdateColumns", columnsConfig)
+        axios(`${apiPath}Sun/Detail/UpdateColumns`, columnsConfig)
           .then((res) => console.log(res))
           .catch((error) => {
             console.error("There was an error!", error);

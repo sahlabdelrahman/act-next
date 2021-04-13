@@ -14,6 +14,8 @@ import Trash from "../public/images/trash.svg";
 import Edit from "../public/images/edit.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const sunHDRConfig = () => {
   const router = useRouter();
   const {
@@ -30,7 +32,7 @@ const sunHDRConfig = () => {
   const [type, setType] = useState("DateTime");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Sun/HDR/GetColumns").then((res) => {
+    axios.get(`${apiPath}Sun/HDR/GetColumns`).then((res) => {
       setColumns(res.data);
     });
   }, []);
@@ -53,7 +55,7 @@ const sunHDRConfig = () => {
           headers: { "Content-Type": "application/json" },
           data: [...columns],
         };
-        axios("http://34.65.51.37/Sun/HDR/UpdateColumns", columnsConfig)
+        axios(`${apiPath}Sun/HDR/UpdateColumns`, columnsConfig)
           .then((res) => console.log(res))
           .catch((error) => {
             console.error("There was an error!", error);

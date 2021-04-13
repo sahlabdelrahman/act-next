@@ -7,18 +7,20 @@ import BreadCrumb from "../components/breadCrumb/breadCrumb";
 import Link from "next/link";
 import Head from "next/head";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const Logs = () => {
   const [logs, setLogs] = useState("");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Logs").then((res) => {
+    axios.get(`${apiPath}Logs`).then((res) => {
       setLogs(res.data);
     });
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      axios.get("http://34.65.51.37/Logs").then((res) => {
+      axios.get(`${apiPath}Logs`).then((res) => {
         setLogs(res.data);
       });
     }, 30000);

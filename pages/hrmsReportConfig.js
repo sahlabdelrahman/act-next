@@ -14,6 +14,8 @@ import Trash from "../public/images/trash.svg";
 import Edit from "../public/images/edit.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const HRMSReportConfig = () => {
   const router = useRouter();
   const {
@@ -30,7 +32,7 @@ const HRMSReportConfig = () => {
   const [type, setType] = useState("DateTime");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Hrms/Report/GetColumns").then((res) => {
+    axios.get(`${apiPath}Hrms/Report/GetColumns`).then((res) => {
       setColumns(res.data);
     });
   }, []);
@@ -53,7 +55,7 @@ const HRMSReportConfig = () => {
           headers: { "Content-Type": "application/json" },
           data: [...columns],
         };
-        axios("http://34.65.51.37/Hrms/Report/UpdateColumns", columnsConfig)
+        axios(`${apiPath}Hrms/Report/UpdateColumns`, columnsConfig)
           .then((res) => console.log(res))
           .catch((error) => {
             console.error("There was an error!", error);

@@ -12,9 +12,11 @@ import Checked from "../public/images/checked.svg";
 import NotChecked from "../public/images/notChecked.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const sunConfig = () => {
   useEffect(() => {
-    axios.get("http://34.65.51.37/Sun/GetConnectionString").then((res) => {
+    axios.get(`${apiPath}Sun/GetConnectionString`).then((res) => {
       setConnectionString(res.data);
     });
   }, []);
@@ -32,7 +34,7 @@ const sunConfig = () => {
     e.preventDefault();
     axios
       .post(
-        `http://34.65.51.37/Sun/UpdateConnectionString?ConnectionString=${connectionString}`
+        `${apiPath}Sun/UpdateConnectionString?ConnectionString=${connectionString}`
       )
       .then((res) => console.log(res))
       .catch((error) => {
@@ -47,7 +49,7 @@ const sunConfig = () => {
   const handleLoadDefaults = (e) => {
     e.preventDefault();
     axios
-      .post(`http://34.65.51.37/Sun/LoadDefaults`)
+      .post(`${apiPath}Sun/LoadDefaults`)
       .then((res) => console.log(res.data))
       .catch((error) => {
         console.error("There was an error!", error.response.data);

@@ -12,7 +12,7 @@ import Edit from "../public/images/edit.svg";
 
 import { apiPath } from "../components/apiPath/apiPath";
 
-const mappingOperaToSunDetail = () => {
+const mappingHRMSToSunDetail = () => {
   const {
     value: sunAttribute,
     resetValue: resetSunAttribute,
@@ -38,15 +38,13 @@ const mappingOperaToSunDetail = () => {
 
   useEffect(() => {
     axios
-      .get(
-        `${apiPath}Mapping/OperaToSun/ReportToDetail/GetOperaReportSunDetail`
-      )
+      .get(`${apiPath}Mapping/HrmsToSun/ReportToDetail/GetHrmsReportSunDETAIL`)
       .then((res) => {
         setColumns(res.data);
         console.log(res.data);
       });
 
-    axios.get(`${apiPath}Opera/Report/GetColumns`).then((res) => {
+    axios.get(`${apiPath}Hrms/Report/GetColumns`).then((res) => {
       setMapWithOperaNames(res.data.map((name) => name.name));
     });
   }, []);
@@ -136,7 +134,7 @@ const mappingOperaToSunDetail = () => {
           data: [...columns],
         };
         axios(
-          `${apiPath}Mapping/OperaToSun/ReportToDetail/UpdateOperaReportSunDetail`,
+          `${apiPath}Mapping/HrmsToSun/ReportToDetail/UpdateOperaReportSunDETAIL`,
           columnsConfig
         )
           .then((res) => console.log(res))
@@ -224,7 +222,7 @@ const mappingOperaToSunDetail = () => {
   const handleLoadDefaults = (e) => {
     e.preventDefault();
     axios
-      .post(`${apiPath}Mapping/OperaToSun/ReportToDetail/LoadDefaults`)
+      .post(`${apiPath}Mapping/HrmsToSun/ReportToDetail/LoadDefaults`)
       .then((res) => console.log(res.data))
       .catch((error) => {
         console.error("There was an error!", error.response.data);
@@ -234,7 +232,7 @@ const mappingOperaToSunDetail = () => {
   return (
     <div>
       <Head>
-        <title>Mapping Opera To Sun Detail</title>
+        <title>Mapping HRMS To Sun Detail</title>
       </Head>
 
       <Header />
@@ -244,14 +242,14 @@ const mappingOperaToSunDetail = () => {
         <div className="container">
           <div className="main_sun_head">
             <div className="head">
-              <h5>Mapping Opera Configraution</h5>
+              <h5>Mapping HRMS Configraution</h5>
               <span type="button" onClick={handleLoadDefaults}>
                 Load Defaults
               </span>
             </div>
 
             <BreadCrumb
-              path="mappingOperaToSunDetail"
+              path="mappingHRMSToSunDetail"
               page="Mapping Opera Configraution"
             />
           </div>
@@ -416,4 +414,4 @@ const mappingOperaToSunDetail = () => {
     </div>
   );
 };
-export default mappingOperaToSunDetail;
+export default mappingHRMSToSunDetail;

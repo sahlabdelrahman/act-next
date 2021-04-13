@@ -12,13 +12,15 @@ import Checked from "../public/images/checked.svg";
 import NotChecked from "../public/images/notChecked.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const OperaConfig = () => {
   useEffect(() => {
-    axios.get("http://34.65.51.37/Opera/GetFilePath").then((res) => {
+    axios.get(`${apiPath}Opera/GetFilePath`).then((res) => {
       setFilePath(res.data);
     });
 
-    axios.get("http://34.65.51.37/Opera/GetCycleTime").then((res) => {
+    axios.get(`${apiPath}Opera/GetCycleTime`).then((res) => {
       setHour(res.data.hour);
       setMinute(res.data.min);
     });
@@ -58,7 +60,7 @@ const OperaConfig = () => {
   const handleConfig = (e) => {
     e.preventDefault();
     axios
-      .post(`http://34.65.51.37/Opera/UpdateFilePath?FilePath=${filePath}`)
+      .post(`${apiPath}Opera/UpdateFilePath?FilePath=${filePath}`)
       .then((res) => console.log(res))
       .catch((error) => {
         console.error("There was an error!", error.response.data);
@@ -70,7 +72,7 @@ const OperaConfig = () => {
       data: { hour: parseInt(hour), min: parseInt(minute) },
     };
 
-    axios("http://34.65.51.37/Opera/UpdateCycleTime", cycleTimeConfig)
+    axios(`${apiPath}Opera/UpdateCycleTime`, cycleTimeConfig)
       .then((res) => console.log(res))
       .catch((error) => {
         console.error("There was an error!", error);
@@ -83,7 +85,7 @@ const OperaConfig = () => {
   const handleLoadDefaults = (e) => {
     e.preventDefault();
     axios
-      .post(`http://34.65.51.37/Opera/LoadDefaults`)
+      .post(`${apiPath}Opera/LoadDefaults`)
       .then((res) => console.log(res.data))
       .catch((error) => {
         console.error("There was an error!", error.response.data);
@@ -131,7 +133,7 @@ const OperaConfig = () => {
                 </div>
               </div>
               <form onSubmit={handleConfig} className="multi-inputs">
-                <h5>Monthly at</h5>
+                <h5>Daily at</h5>
                 <div>
                   <div>
                     <label>Hour</label>

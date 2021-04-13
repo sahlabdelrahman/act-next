@@ -14,6 +14,8 @@ import Trash from "../public/images/trash.svg";
 import Edit from "../public/images/edit.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const mappingOperaToSunHDR = () => {
   const {
     value: sunAttribute,
@@ -40,15 +42,13 @@ const mappingOperaToSunHDR = () => {
 
   useEffect(() => {
     axios
-      .get(
-        "http://34.65.51.37/Mapping/OperaToSun/ReportToHDR/GetOperaReportSunHdr"
-      )
+      .get(`${apiPath}Mapping/OperaToSun/ReportToHDR/GetOperaReportSunHdr`)
       .then((res) => {
         setColumns(res.data);
         console.log(res.data);
       });
 
-    axios.get("http://34.65.51.37/Opera/Report/GetColumns").then((res) => {
+    axios.get(`${apiPath}Opera/Report/GetColumns`).then((res) => {
       setMapWithOperaNames(res.data.map((name) => name.name));
     });
   }, []);
@@ -138,7 +138,7 @@ const mappingOperaToSunHDR = () => {
           data: [...columns],
         };
         axios(
-          "http://34.65.51.37//Mapping/OperaToSun/ReportToHDR/UpdateOperaReportSunHdr",
+          `${apiPath}/Mapping/OperaToSun/ReportToHDR/UpdateOperaReportSunHdr`,
           columnsConfig
         )
           .then((res) => console.log(res))
@@ -228,7 +228,7 @@ const mappingOperaToSunHDR = () => {
   const handleLoadDefaults = (e) => {
     e.preventDefault();
     axios
-      .post(`http://34.65.51.37/Mapping/OperaToSun/ReportToHDR/LoadDefaults`)
+      .post(`${apiPath}Mapping/OperaToSun/ReportToHDR/LoadDefaults`)
       .then((res) => console.log(res.data))
       .catch((error) => {
         console.error("There was an error!", error.response.data);
@@ -248,12 +248,15 @@ const mappingOperaToSunHDR = () => {
         <div className="container">
           <div className="main_sun_head">
             <div className="head">
-              <h5>Opera Configraution</h5>
+              <h5>Mapping Opera Configraution</h5>
               <span type="button" onClick={handleLoadDefaults}>
                 Load Defaults
               </span>
             </div>
-            <BreadCrumb path="operaConfig" page="Opera Configraution" />
+            <BreadCrumb
+              path="mappingOperaToSunHDR"
+              page="Mapping Opera Configraution"
+            />
           </div>
 
           <div className="main_sun_body scrollable">

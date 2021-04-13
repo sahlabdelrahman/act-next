@@ -6,13 +6,15 @@ import Header from "../components/header/header.js";
 import SideNav from "../components/sideNav/sideNav";
 import BreadCrumb from "../components/breadCrumb/breadCrumb";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const ManualExecute = () => {
   const Config = {
     method: "POST",
   };
   const handleHRMS = (e) => {
     e.preventDefault();
-    axios("http://34.65.51.37/HrmsManualExecute/Execute", Config)
+    axios(`${apiPath}HrmsManualExecute/Execute`, Config)
       .then((res) => {
         console.log(res.data);
       })
@@ -22,7 +24,7 @@ const ManualExecute = () => {
   };
   const handleOpera = (e) => {
     e.preventDefault();
-    axios("http://34.65.51.37/OperaManualExecute/Execute", Config)
+    axios(`${apiPath}OperaManualExecute/Execute`, Config)
       .then((res) => {
         console.log(res.data);
       })

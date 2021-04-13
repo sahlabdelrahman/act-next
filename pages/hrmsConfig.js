@@ -12,6 +12,8 @@ import Checked from "../public/images/checked.svg";
 import NotChecked from "../public/images/notChecked.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const HRMSConfig = () => {
   const router = useRouter();
 
@@ -46,11 +48,11 @@ const HRMSConfig = () => {
   } = useInput("");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Hrms/GetConnectionString").then((res) => {
+    axios.get(`${apiPath}Hrms/GetConnectionString`).then((res) => {
       setConnectionString(res.data);
     });
 
-    axios.get("http://34.65.51.37/Hrms/GetCycleTime").then((res) => {
+    axios.get(`${apiPath}Hrms/GetCycleTime`).then((res) => {
       setDay(res.data.day);
       setHour(res.data.hour);
       setMinute(res.data.min);
@@ -70,7 +72,7 @@ const HRMSConfig = () => {
     e.preventDefault();
     axios
       .post(
-        `http://34.65.51.37/Hrms/UpdateConnectionString?ConnectionString=${connectionString}`
+        `${apiPath}Hrms/UpdateConnectionString?ConnectionString=${connectionString}`
       )
       .then((res) => console.log(res))
       .catch((error) => {
@@ -83,7 +85,7 @@ const HRMSConfig = () => {
       data: { day: parseInt(day), hour: parseInt(hour), min: parseInt(minute) },
     };
 
-    axios("http://34.65.51.37/Hrms/UpdateCycleTime", cycleTimeConfig)
+    axios(`${apiPath}Hrms/UpdateCycleTime`, cycleTimeConfig)
       .then((res) => console.log(res))
       .catch((error) => {
         console.error("There was an error!", error);

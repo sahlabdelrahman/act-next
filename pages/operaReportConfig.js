@@ -14,6 +14,8 @@ import Trash from "../public/images/trash.svg";
 import Edit from "../public/images/edit.svg";
 import Link from "next/link";
 
+import { apiPath } from "../components/apiPath/apiPath";
+
 const operaReportConfig = () => {
   const router = useRouter();
 
@@ -38,6 +40,20 @@ const operaReportConfig = () => {
     bind: bindEndPos,
   } = useInput("");
 
+  const {
+    value: fromStart,
+    resetValue: resetFromStart,
+    setValue: setFromStart,
+    bind: bindFromStart,
+  } = useInput("");
+
+  const {
+    value: fromEnd,
+    resetValue: resetFromEnd,
+    setValue: setFromEnd,
+    bind: bindFromEnd,
+  } = useInput("");
+
   const [columns, setColumns] = useState([]);
 
   const types = ["DateTime", "Decimal", "Double", "Int", "String", "Short"];
@@ -45,9 +61,20 @@ const operaReportConfig = () => {
   const [type, setType] = useState("DateTime");
 
   useEffect(() => {
-    axios.get("http://34.65.51.37/Opera/Report/GetColumns").then((res) => {
+    axios.get(`${apiPath}Opera/Report/GetColumns`).then((res) => {
       setColumns(res.data);
     });
+
+    axios
+      .get(`${apiPath}Opera/GetNumberOfLinesToBeIgnoredAtTheBeginning`)
+      .then((res) => {
+        setFromStart(res.data);
+      });
+    axios
+      .get(`${apiPath}Opera/GetNumberOfLinesToBeIgnoredAtTheEnd`)
+      .then((res) => {
+        setFromEnd(res.data);
+      });
   }, []);
 
   const handleSubmit = (e) => {
@@ -78,7 +105,7 @@ const operaReportConfig = () => {
           headers: { "Content-Type": "application/json" },
           data: [...columns],
         };
-        axios("http://34.65.51.37/Opera/Report/UpdateColumns", columnsConfig)
+        axios(`${apiPath}Opera/Report/UpdateColumns`, columnsConfig)
           .then((res) => console.log(res))
           .catch((error) => {
             console.error("There was an error!", error);
@@ -138,6 +165,31 @@ const operaReportConfig = () => {
     router.push({
       pathname: `/operaIsDone`,
     });
+  };
+
+  const handleIgnored = (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        `${apiPath}Opera/UpdateNumberOfLinesToBeIgnoredAtTheBeginning?NumberOfLinesToBeIgnoredAtTheBeginning=${parseInt(
+          fromStart
+        )}`
+      )
+      .then((res) => console.log(res))
+      .catch((error) => {
+        console.error("There was an error!", error.response.data);
+      });
+
+    axios
+      .post(
+        `${apiPath}Opera/UpdateNumberOfLinesToBeIgnoredAtTheEnd?NumberOfLinesToBeIgnoredAtTheEnd=${parseInt(
+          fromEnd
+        )}`
+      )
+      .then((res) => console.log(res))
+      .catch((error) => {
+        console.error("There was an error!", error.response.data);
+      });
   };
 
   return (
@@ -221,6 +273,25 @@ const operaReportConfig = () => {
                     <button type="button" onClick={handleDone}>
                       Done
                     </button>
+                  </div>
+                </div>
+              </form>
+              <form onSubmit={handleIgnored} className="multi-inputs more">
+                <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>
+                  Number of lines to be ignored
+                </h5>
+                <div>
+                  <div>
+                    <label>From Start</label>
+                    <input type="number" {...bindFromStart} required />
+                  </div>
+                  <div>
+                    <label>From End</label>
+                    <input type="number" {...bindFromEnd} required />
+                  </div>
+
+                  <div>
+                    <button type="submit">Ignore</button>
                   </div>
                 </div>
               </form>

@@ -80,6 +80,33 @@ const SideNav = () => {
             Mapping Opera to sun HDR
           </a>
         </Link>
+        <Link href="/mappingHRMSToSunDetail">
+          <a
+            className={`${
+              router.pathname == "/mappingHRMSToSunDetail" ? "active" : ""
+            }`}
+          >
+            Mapping HRMS to sun Detail
+          </a>
+        </Link>
+        <Link href="/mappingHRMSToSunHDR">
+          <a
+            className={`${
+              router.pathname == "/mappingHRMSToSunHDR" ? "active" : ""
+            }`}
+          >
+            Mapping HRMS to sun HDR
+          </a>
+        </Link>
+        <Link href="/executionHistory">
+          <a
+            className={`${
+              router.pathname == "/executionHistory" ? "active" : ""
+            }`}
+          >
+            Execution History
+          </a>
+        </Link>
       </div>
     </div>
   );
