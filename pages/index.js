@@ -5,6 +5,7 @@ import { apiPath } from "../components/apiPath/apiPath";
 
 import Group from "../public/images/group.png";
 import num from "../public/images/98.png";
+import Link from "next/link";
 
 export default function Home() {
   const handleDefaults = (e) => {
@@ -64,10 +65,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* <main>
-        <div id="black-corner" class="text-center d-flex align-items-center">
+      <main>
+        <div
+          id="black-corner"
+          className="text-center d-flex align-items-center"
+        >
           <img
-            class="d-block m-auto"
+            className="d-block m-auto"
             width="182"
             height="80"
             src={num}
@@ -78,35 +82,40 @@ export default function Home() {
         <div id="white-circle"></div>
         <div id="FC2839-largeCircle"></div>
         <div id="FC2839-smallCircle"></div>
-        <div id="all-content" class="row m-auto">
-          <div class="col-12 col-lg-6 m-auto order-2 order-lg-1">
-            <h2 class="mb-3 ml-auto mr-auto">create like never before</h2>
-            <p class="ml-auto mr-auto mb-3">
+        <div
+          id="all-content"
+          style={{ position: "absolute", left: "15%" }}
+          className="row m-auto"
+        >
+          <div className="col-12 col-lg-6 m-auto order-2 order-lg-1">
+            <h2 className="mb-3 ml-auto mr-auto">create like never before</h2>
+            <p className="ml-auto mr-auto mb-3">
               welcome to our application, let's start connecting
             </p>
-            <div class="m-auto">
-              <a href="#" id="button">
-                get started
-              </a>
-              <a href="#" id="link">
-                how it works?
+            <div className="m-auto">
+              <Link href="/sunConfig">
+                <a id="button">get started</a>
+              </Link>
+              <a id="link">
+                <button
+                  style={{
+                    background: "none",
+                    border: "none",
+                    fontWeight: "bold",
+                    outline: "none",
+                  }}
+                  onClick={handleDefaults}
+                >
+                  Load all Defaults
+                </button>
               </a>
             </div>
           </div>
-          <div id="img-div" class="col-12 col-lg-6 m-auto order-1 order-lg-2">
-            <img
-              class="d-block m-auto"
-              src={Group}
-              width="532"
-              height="513"
-              alt=""
-            />
-          </div>
+          <div
+            id="img-div"
+            className="col-12 col-lg-6 m-auto order-1 order-lg-2"
+          ></div>
         </div>
-      </main> */}
-
-      <main>
-        <button onClick={handleDefaults}>Load all Defaults</button>
       </main>
     </div>
   );

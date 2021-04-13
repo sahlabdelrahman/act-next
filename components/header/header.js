@@ -6,13 +6,23 @@ import Docs from "../../public/images/docs.svg";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+import { apiPath } from "../apiPath/apiPath";
+
 const Header = () => {
   const router = useRouter();
 
+  const Config = {
+    method: "POST",
+  };
+
   const handleShutdown = () => {
-    // axios.get("http://34.65.51.37/Sun/GetConnectionString").then((res) => {
-    //   console.log(res.data);
-    // });
+    axios(`${apiPath}Shutdown/blow-me-up`, Config)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
     router.push({
       pathname: `/shutdownDoc`,
     });
@@ -20,7 +30,7 @@ const Header = () => {
 
   return (
     <header>
-      <div className="container">
+      <div className="container-lo">
         <div>
           <img src={Logo} alt="logo" />
           <div>

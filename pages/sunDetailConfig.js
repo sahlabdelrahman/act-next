@@ -35,6 +35,7 @@ const sunDetailConfig = () => {
   useEffect(() => {
     axios.get(`${apiPath}Sun/Detail/GetColumns`).then((res) => {
       setColumns(res.data);
+      console.log(res.data);
     });
   }, []);
 

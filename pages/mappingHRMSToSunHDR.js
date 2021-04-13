@@ -317,7 +317,7 @@ const mappingHRMSToSunHDR = () => {
                         onChange={(e) => handleCondition(e)}
                         value="mapWithOpera"
                       />
-                      <label htmlFor="mapWithOpera">mapWithOpera</label>
+                      <label htmlFor="mapWithOpera">mapWithHRMS</label>
                     </div>
                   </div>
                   <div>

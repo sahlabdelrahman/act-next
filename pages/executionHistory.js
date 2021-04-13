@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import Head from "next/head";
-import useSWR from "swr";
 
 import { useRouter } from "next/router";
 
@@ -72,10 +71,10 @@ const executionHistory = () => {
                     <th>Type</th>
                     <th>Settings</th>
                   </tr>
-                  {columns.map(({ id, dateTime, type }, i) => (
+                  {columns.map(({ id, dateTime, type, hdrId }, i) => (
                     <tr key={i}>
                       <td>
-                        {id}
+                        {hdrId}
                         {"  "}
                       </td>
                       <td>{dateTime}</td>

@@ -40,20 +40,6 @@ const operaReportConfig = () => {
     bind: bindEndPos,
   } = useInput("");
 
-  const {
-    value: fromStart,
-    resetValue: resetFromStart,
-    setValue: setFromStart,
-    bind: bindFromStart,
-  } = useInput("");
-
-  const {
-    value: fromEnd,
-    resetValue: resetFromEnd,
-    setValue: setFromEnd,
-    bind: bindFromEnd,
-  } = useInput("");
-
   const [columns, setColumns] = useState([]);
 
   const types = ["DateTime", "Decimal", "Double", "Int", "String", "Short"];
@@ -64,17 +50,6 @@ const operaReportConfig = () => {
     axios.get(`${apiPath}Opera/Report/GetColumns`).then((res) => {
       setColumns(res.data);
     });
-
-    axios
-      .get(`${apiPath}Opera/GetNumberOfLinesToBeIgnoredAtTheBeginning`)
-      .then((res) => {
-        setFromStart(res.data);
-      });
-    axios
-      .get(`${apiPath}Opera/GetNumberOfLinesToBeIgnoredAtTheEnd`)
-      .then((res) => {
-        setFromEnd(res.data);
-      });
   }, []);
 
   const handleSubmit = (e) => {
@@ -167,31 +142,6 @@ const operaReportConfig = () => {
     });
   };
 
-  const handleIgnored = (e) => {
-    e.preventDefault();
-    axios
-      .post(
-        `${apiPath}Opera/UpdateNumberOfLinesToBeIgnoredAtTheBeginning?NumberOfLinesToBeIgnoredAtTheBeginning=${parseInt(
-          fromStart
-        )}`
-      )
-      .then((res) => console.log(res))
-      .catch((error) => {
-        console.error("There was an error!", error.response.data);
-      });
-
-    axios
-      .post(
-        `${apiPath}Opera/UpdateNumberOfLinesToBeIgnoredAtTheEnd?NumberOfLinesToBeIgnoredAtTheEnd=${parseInt(
-          fromEnd
-        )}`
-      )
-      .then((res) => console.log(res))
-      .catch((error) => {
-        console.error("There was an error!", error.response.data);
-      });
-  };
-
   return (
     <div>
       <Head>
@@ -273,25 +223,6 @@ const operaReportConfig = () => {
                     <button type="button" onClick={handleDone}>
                       Done
                     </button>
-                  </div>
-                </div>
-              </form>
-              <form onSubmit={handleIgnored} className="multi-inputs more">
-                <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>
-                  Number of lines to be ignored
-                </h5>
-                <div>
-                  <div>
-                    <label>From Start</label>
-                    <input type="number" {...bindFromStart} required />
-                  </div>
-                  <div>
-                    <label>From End</label>
-                    <input type="number" {...bindFromEnd} required />
-                  </div>
-
-                  <div>
-                    <button type="submit">Ignore</button>
                   </div>
                 </div>
               </form>

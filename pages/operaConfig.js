@@ -24,6 +24,17 @@ const OperaConfig = () => {
       setHour(res.data.hour);
       setMinute(res.data.min);
     });
+
+    axios
+      .get(`${apiPath}Opera/GetNumberOfLinesToBeIgnoredAtTheBeginning`)
+      .then((res) => {
+        setFromStart(res.data);
+      });
+    axios
+      .get(`${apiPath}Opera/GetNumberOfLinesToBeIgnoredAtTheEnd`)
+      .then((res) => {
+        setFromEnd(res.data);
+      });
   }, []);
 
   const router = useRouter();
@@ -55,6 +66,20 @@ const OperaConfig = () => {
     bind: bindNumberOfColumns,
   } = useInput(null);
 
+  const {
+    value: fromStart,
+    resetValue: resetFromStart,
+    setValue: setFromStart,
+    bind: bindFromStart,
+  } = useInput("");
+
+  const {
+    value: fromEnd,
+    resetValue: resetFromEnd,
+    setValue: setFromEnd,
+    bind: bindFromEnd,
+  } = useInput("");
+
   const [number, setNumber] = useState(0);
 
   const handleConfig = (e) => {
@@ -77,9 +102,6 @@ const OperaConfig = () => {
       .catch((error) => {
         console.error("There was an error!", error);
       });
-    router.push({
-      pathname: `/operaReportConfig`,
-    });
   };
 
   const handleLoadDefaults = (e) => {
@@ -90,6 +112,29 @@ const OperaConfig = () => {
       .catch((error) => {
         console.error("There was an error!", error.response.data);
       });
+  };
+
+  const handleIgnored = (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        `${apiPath}Opera/UpdateNumberOfLinesToBeIgnored?NumberOfLinesToBeIgnoredAtTheBeginning=${parseInt(fromStart)}&NumberOfLinesToBeIgnoredAtTheEnd=${parseInt(fromEnd)}`
+      )
+      .then((res) => console.log(res))
+      .catch((error) => {
+        console.error("There was an error!", error.response.data);
+      });
+
+    
+  };
+
+  ;
+
+  const handleDone = (e) => {
+    e.preventDefault();
+    router.push({
+      pathname: `/operaReportConfig`,
+    });
   };
 
   return (
@@ -160,6 +205,28 @@ const OperaConfig = () => {
                     <label>Path</label>
                     <input type="text" required {...bindFilePath} />
                     <button type="submit">Config</button>
+                  </div>
+                </div>
+              </form>
+              <form onSubmit={handleIgnored} className="multi-inputs more">
+                <h5 style={{ marginTop: "15px", marginBottom: "15px" }}>
+                  Number of lines to be ignored
+                </h5>
+                <div>
+                  <div>
+                    <label>From Start</label>
+                    <input type="number" {...bindFromStart} required />
+                  </div>
+                  <div>
+                    <label>From End</label>
+                    <input type="number" {...bindFromEnd} required />
+                  </div>
+
+                  <div>
+                    <button type="submit">Ignore</button>
+                    <button type="button" onClick={handleDone}>
+                      Done
+                    </button>
                   </div>
                 </div>
               </form>

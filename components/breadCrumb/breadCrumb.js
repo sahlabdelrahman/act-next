@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const BreadCrumb = ({ path, page }) => {
   return (
-    <div className="breadcrumb">
+    <div className="breadcrumb-lo">
       <Link href="/">
         <a className="first">Home</a>
       </Link>
