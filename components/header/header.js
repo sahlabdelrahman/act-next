@@ -32,7 +32,12 @@ const Header = () => {
     <header>
       <div className="container-lo">
         <div>
-          <img src={Logo} alt="logo" />
+          <Link href="/">
+            <a>
+              <img src={Logo} alt="logo" />
+            </a>
+          </Link>
+
           <div>
             <Link href="http://34.65.51.37/swagger/index.html">
               <a>
